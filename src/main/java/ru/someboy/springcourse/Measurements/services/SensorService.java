@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.someboy.springcourse.Measurements.models.Sensor;
 import ru.someboy.springcourse.Measurements.repositories.SensorRepository;
 
+import java.util.Optional;
+
 /**
  * @author SomeBoy on 13.05.2023
  * @project Measurements
@@ -20,6 +22,10 @@ public class SensorService {
         this.sensorRepository = sensorRepository;
     }
 
+    public Sensor findOne(int id) {
+        Optional<Sensor> foundSensor = sensorRepository.findById(id);
+        return foundSensor.orElse(null);
+    }
     @Transactional
     public void save(Sensor sensor) {
         sensorRepository.save(sensor);

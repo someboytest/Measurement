@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.someboy.springcourse.Measurements.dto.MeasurementDTO;
-import ru.someboy.springcourse.Measurements.dto.MeasurementOutDTO;
 import ru.someboy.springcourse.Measurements.models.Measurement;
 import ru.someboy.springcourse.Measurements.services.MeasurementsService;
+import ru.someboy.springcourse.Measurements.services.SensorService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,20 +21,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/measurements")
 public class MeasurementController {
     private final MeasurementsService measurementsService;
+    private final SensorService sensorService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public MeasurementController(MeasurementsService measurementsService, ModelMapper modelMapper) {
+    public MeasurementController(MeasurementsService measurementsService, SensorService sensorService, ModelMapper modelMapper) {
         this.measurementsService = measurementsService;
+        this.sensorService = sensorService;
         this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public List<MeasurementOutDTO> getMeasurements() {
+    public List<MeasurementDTO> getMeasurements() {
         measurementsService.findAll().forEach(System.out::println);
         return measurementsService.findAll()
                 .stream()
-                .map(this::convertToMeasurementOutDTO)
+                .map(this::convertToMeasurementDTO)
                 .collect(Collectors.toList());
     }
 
@@ -48,13 +50,13 @@ public class MeasurementController {
         return modelMapper.map(measurementDTO, Measurement.class);
     }
 
-    private MeasurementOutDTO convertToMeasurementOutDTO(Measurement measurement) {
-        MeasurementOutDTO measurementOutDTO = new MeasurementOutDTO();
-        measurementOutDTO.setValue(measurement.getValue());
-        measurementOutDTO.setRaining(measurement.isRaining());
-        measurementOutDTO.setSensor(measurement.getSensor().getName());
-        System.out.println(measurement.getSensor());
-        return measurementOutDTO;
+    private MeasurementDTO convertToMeasurementDTO(Measurement measurement) {
+        MeasurementDTO measurementDTO = new MeasurementDTO();
+        measurementDTO.setValue(measurement.getValue());
+        measurementDTO.setRaining(measurement.isRaining());
+        measurementDTO.setSensor(sensorService.findOne(measurement.getSensor().getSensorId()));
+//        System.out.println(measurement.getSensor());
+        return measurementDTO;
 //        return modelMapper.map(measurement, MeasurementDTO.class);
     }
 }
