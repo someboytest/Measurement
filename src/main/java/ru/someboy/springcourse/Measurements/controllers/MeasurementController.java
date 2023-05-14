@@ -51,6 +51,7 @@ public class MeasurementController {
     }
 
     private MeasurementDTO convertToMeasurementDTO(Measurement measurement) {
+        System.out.println(sensorService.findOne(measurement.getSensor().getSensorId()));
         MeasurementDTO measurementDTO = new MeasurementDTO();
         measurementDTO.setValue(measurement.getValue());
         measurementDTO.setRaining(measurement.isRaining());
