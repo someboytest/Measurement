@@ -1,0 +1,12 @@
+server.port=
+# Data source Spring JPA
+spring.datasource.driverClassName=
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+# Hibernate configuration
+spring.jpa.properties.hibernate.dialect=
+spring.jpa.properties.hibernate.show_sql=
+
+
